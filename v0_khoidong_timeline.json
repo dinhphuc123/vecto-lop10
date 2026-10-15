@@ -1,0 +1,72 @@
+{
+ "video": "v0_khoidong",
+ "title": "Đi 10 km nhưng đến nơi khác nhau",
+ "chặng": "S01",
+ "duration": 70.51,
+ "segments": [
+  {
+   "index": 0,
+   "kicker": "Chuyện lạ ở cảng",
+   "title": "Đi 10 km nhưng đến nơi khác nhau",
+   "start": 0.0,
+   "duration": 9.76
+  },
+  {
+   "index": 1,
+   "kicker": "Tàu thứ nhất",
+   "title": "Tàu Đông Phong đi về hướng đông",
+   "start": 9.76,
+   "duration": 8.78
+  },
+  {
+   "index": 2,
+   "kicker": "Tàu thứ hai",
+   "title": "Tàu Bắc Hải đi về hướng bắc",
+   "start": 18.54,
+   "duration": 12.16
+  },
+  {
+   "index": 3,
+   "kicker": "So sánh",
+   "title": "Cùng khoảng cách, khác đích đến",
+   "start": 30.7,
+   "duration": 9.59
+  },
+  {
+   "index": 4,
+   "kicker": "Còn thiếu điều gì?",
+   "title": "Hướng đi quyết định đích đến",
+   "start": 40.29,
+   "duration": 9.55
+  },
+  {
+   "index": 5,
+   "kicker": "Thử đoán xem",
+   "title": "Vì sao đến nơi khác nhau?",
+   "start": 49.84,
+   "duration": 10.84
+  },
+  {
+   "index": 6,
+   "kicker": "Bài học hôm nay",
+   "title": "Đoạn thẳng có hướng: vectơ",
+   "start": 60.68,
+   "duration": 9.83
+  }
+ ],
+ "pauses": [
+  {
+   "at": 70.51,
+   "quiz_id": "v0d1",
+   "type": "prediction",
+   "graded": false,
+   "block_seek": true,
+   "question": "Cùng đi 10 km từ cảng, hai tàu tới hai nơi khác nhau. Vì sao?",
+   "options": null,
+   "correct": null,
+   "explain": null,
+   "answer_hint": "Hai tàu đi theo hai hướng khác nhau.",
+   "modal_lead": "Em hãy viết dự đoán của mình vào ô bên dưới. Mọi ý kiến đều được ghi nhận."
+  }
+ ]
+}

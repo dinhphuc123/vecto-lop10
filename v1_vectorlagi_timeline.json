@@ -1,0 +1,100 @@
+{
+ "video": "v1_vectorlagi",
+ "title": "Vectơ là gì?",
+ "chặng": "S04",
+ "duration": 92.59,
+ "segments": [
+  {
+   "index": 0,
+   "kicker": "Câu hỏi dẫn dắt",
+   "title": "Ghi lại hành trình bằng hình nào?",
+   "start": 0.0,
+   "duration": 9.59
+  },
+  {
+   "index": 1,
+   "kicker": "Định nghĩa",
+   "title": "Vectơ là đoạn thẳng có hướng",
+   "start": 9.59,
+   "duration": 12.4
+  },
+  {
+   "index": 2,
+   "kicker": "Điểm đầu, điểm cuối",
+   "title": "Đọc tên vectơ từ điểm đầu",
+   "start": 21.99,
+   "duration": 11.95
+  },
+  {
+   "index": 3,
+   "kicker": "Cách viết gọn",
+   "title": "Viết gọn bằng một chữ thường",
+   "start": 33.94,
+   "duration": 8.75
+  },
+  {
+   "index": 4,
+   "kicker": "Luyện đọc ký hiệu",
+   "title": "Em đọc to các ký hiệu",
+   "start": 42.69,
+   "duration": 9.11
+  },
+  {
+   "index": 5,
+   "kicker": "Độ dài vectơ",
+   "title": "Độ dài của vectơ AB",
+   "start": 51.8,
+   "duration": 16.03
+  },
+  {
+   "index": 6,
+   "kicker": "Chú ý",
+   "title": "Vectơ AB và vectơ BA khác nhau",
+   "start": 67.83,
+   "duration": 15.14
+  },
+  {
+   "index": 7,
+   "kicker": "Nhớ nhé",
+   "title": "Tóm tắt: vectơ là gì?",
+   "start": 82.97,
+   "duration": 9.62
+  }
+ ],
+ "pauses": [
+  {
+   "at": 33.94,
+   "quiz_id": "v1d1",
+   "type": "mcq",
+   "graded": true,
+   "block_seek": true,
+   "question": "Điểm nào là điểm đầu của vectơ trong hình?",
+   "options": [
+    "Điểm A",
+    "Điểm B"
+   ],
+   "correct": 0,
+   "explain": "Điểm đầu là nơi hành trình bắt đầu; mũi tên xuất phát từ điểm A.",
+   "answer_hint": null,
+   "modal_lead": "Em vừa học điểm đầu và điểm cuối. Trả lời câu hỏi rồi xem tiếp nhé."
+  },
+  {
+   "at": 67.83,
+   "quiz_id": "v1d2",
+   "type": "mcq",
+   "graded": true,
+   "block_seek": true,
+   "question": "Ký hiệu độ dài của vectơ AB là gì?",
+   "options": [
+    "Hai gạch đứng ôm lấy vectơ AB",
+    "Một mũi tên trên chữ AB",
+    "Hai gạch đứng ôm lấy chữ a",
+    "Chữ AB viết thường"
+   ],
+   "correct": 0,
+   "explain": "Độ dài của vectơ AB ký hiệu bằng hai gạch đứng ôm lấy vectơ AB.",
+   "answer_hint": null,
+   "modal_lead": "Em vừa học ký hiệu độ dài. Trả lời câu hỏi rồi xem tiếp nhé."
+  }
+ ]
+}

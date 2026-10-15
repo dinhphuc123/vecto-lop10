@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab 2 (S06) — Cùng phương là cùng "đường đi"</title>
+<style>
+  body { font-family: "Segoe UI", sans-serif; max-width: 920px; margin: 0 auto; padding: 16px; background: #f7f9fc; color: #222; }
+  h2 { color: #1565c0; margin: 4px 0 10px; }
+  .step { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 14px 16px; margin: 14px 0; }
+  .step h3 { margin: 0 0 8px; color: #1565c0; font-size: 18px; }
+  .hint { color: #555; font-size: 14px; }
+  textarea { width: 100%; min-height: 56px; border: 1px solid #bbb; border-radius: 8px; padding: 8px; font-size: 16px; font-family: inherit; box-sizing: border-box; }
+  button { font-size: 16px; padding: 9px 16px; border-radius: 8px; border: none; cursor: pointer; background: #1565c0; color: #fff; margin: 4px 6px 4px 0; }
+  button.ghost { background: #e3f2fd; color: #1565c0; }
+  button:disabled { opacity: .5; cursor: default; }
+  .panel { display: flex; gap: 16px; flex-wrap: wrap; }
+  #stage { background: #fff; border: 1px solid #ddd; border-radius: 8px; max-width: 100%; height: auto; touch-action: none; }
+  .controls { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 14px; min-width: 250px; flex: 1; }
+  input[type=range] { width: 100%; min-height: 34px; }
+  select { font-size: 16px; padding: 6px; border-radius: 6px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 15px; }
+  td, th { border: 1px solid #ccc; padding: 6px 8px; text-align: center; }
+  th { background: #e3f2fd; }
+  .lamp { display: flex; align-items: center; gap: 10px; background: #f1f8e9; border: 1px solid #c5e1a5; border-radius: 8px; padding: 8px 12px; margin: 8px 0; font-size: 16px; }
+  .lamp .dot { width: 20px; height: 20px; border-radius: 50%; background: #bdbdbd; flex: none; }
+  .lamp.on .dot { background: #2e7d32; box-shadow: 0 0 10px #2e7d32; }
+  .q { background: #fff3e0; border-left: 4px solid #ef6c00; padding: 10px 14px; margin: 10px 0; font-size: 16px; }
+  .q .ans { display: none; margin-top: 8px; color: #2e7d32; font-weight: bold; }
+  .q.show .ans { display: block; }
+  .fill { font-size: 17px; line-height: 2.2; }
+  .fill input { width: 110px; font-size: 16px; text-align: center; border: 2px solid #bbb; border-radius: 6px; padding: 4px; }
+  .fill input.ok { border-color: #2e7d32; background: #e8f5e9; }
+  .fill input.bad { border-color: #c62828; background: #ffebee; }
+  #eureka { display: none; text-align: center; padding: 12px; background: #e8f5e9; border: 2px solid #2e7d32; border-radius: 10px; margin-top: 10px; font-size: 18px; color: #1b5e20; }
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
+  .pairBox { background: #e8f0fe; border-radius: 8px; padding: 10px 12px; margin-top: 10px; font-size: 16px; }
+</style>
+</head>
+<body>
+<h2>🔬 Lab 2 — Cùng phương là cùng "đường đi"</h2>
+
+<div class="step">
+  <h3>Bước 1 — Dự đoán</h3>
+  <p><b>"Em nhìn các vectơ trên mặt bàn. Em đoán 'cùng phương' nghĩa là gì?"</b>
+     <span class="hint">(Dự đoán tự do, không chấm đúng sai)</span></p>
+  <textarea id="duDoan" placeholder="Em viết dự đoán của mình vào đây…"></textarea><br><br>
+  <button class="ghost" onclick="saveGuess()">📌 Ghi dự đoán</button>
+  <p class="hint" id="guessNote"></p>
+</div>
+
+<div class="step">
+  <h3>Bước 2 — Thao tác</h3>
+  <div class="panel">
+    <svg id="stage" width="540" height="420" viewBox="0 0 540 420"></svg>
+    <div class="controls">
+      <button class="ghost" id="giaBtn" onclick="toggleGia()">📏 Hiện giá các vectơ</button>
+      <p>Vectơ đang chọn: <b id="selName">AB→</b></p>
+      <label>Độ dài <span id="selName2">AB→</span>: <span id="lenVal">4</span> cm</label>
+      <input type="range" id="lenSlider" min="1" max="8" step="0.5" value="4">
+      <div class="pairBox">
+        So sánh cặp:
+        <select id="p1"><option>AB→</option><option>CD→</option><option>EF→</option><option>GH→</option></select>
+        với
+        <select id="p2"><option>CD→</option><option>AB→</option><option>EF→</option><option>GH→</option></select>
+        <div id="pairInfo" style="margin-top:8px"></div>
+      </div>
+      <button onclick="record()">📋 Ghi số liệu</button>
+      <table id="dataTable">
+        <tr><th>#</th><th>Cặp</th><th>Giá</th><th>Hướng</th><th>Độ dài</th></tr>
+      </table>
+      <p class="hint">👆 Kéo các <b>điểm tròn</b> để di chuyển đầu/mút vectơ. Chạm vào một vectơ để chọn rồi đổi độ dài bằng thanh trượt. Ghi 3 mẫu: giá song song / giá trùng / giá cắt nhau.</p>
+    </div>
+  </div>
+</div>
+
+<div class="step">
+  <h3>Bước 3 — Quan sát</h3>
+  <div class="lamp" id="lamp1"><span class="dot"></span><span>Đèn 1: phát hiện cặp vectơ có giá <b>song song</b>.</span></div>
+  <div class="lamp" id="lamp2"><span class="dot"></span><span>Đèn 2: phát hiện cặp vectơ có giá <b>trùng nhau</b>.</span></div>
+  <div class="lamp" id="lamp3"><span class="dot"></span><span>Đèn 3: phát hiện cặp vectơ <b>cùng hướng và cùng độ dài</b>.</span></div>
+  <div class="q">"Hai giá song song thì hai vectơ thế nào?" <button class="ghost" onclick="this.parentElement.classList.toggle('show')">Hiện đáp án</button>
+    <div class="ans">Đáp án: Cùng phương.</div></div>
+  <div class="q">"Hai giá trùng nhau thì hai vectơ thế nào?" <button class="ghost" onclick="this.parentElement.classList.toggle('show')">Hiện đáp án</button>
+    <div class="ans">Đáp án: Cũng cùng phương.</div></div>
+  <div class="q">"Cùng phương, cùng chiều mũi tên, độ dài bằng nhau thì hai vectơ thế nào?" <button class="ghost" onclick="this.parentElement.classList.toggle('show')">Hiện đáp án</button>
+    <div class="ans">Đáp án: Bằng nhau.</div></div>
+</div>
+
+<div class="step">
+  <h3>Bước 4 — Kết luận</h3>
+  <p class="fill">Hai vectơ cùng phương khi giá của chúng
+    <input id="f1"> hoặc <input id="f2">.</p>
+  <button onclick="check()">Kiểm tra kết luận</button>
+  <div id="eureka">🎉 <b>EUREKA!</b> Em đã tự khám phá ra: cùng phương = giá song song hoặc trùng nhau; cùng hướng + cùng độ dài = bằng nhau.</div>
+</div>
+<canvas id="confetti"></canvas>
+
+<script>
+(function(){
+"use strict";
+const svg = document.getElementById('stage');
+const NS = 'http://www.w3.org/2000/svg';
+const PX = 30; // 30 px = 1 cm
+function el(name, attrs, parent){ const e=document.createElementNS(NS,name); for(const k in attrs) e.setAttribute(k,attrs[k]); (parent||svg).appendChild(e); return e; }
+el('defs',{}).innerHTML = '<marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="COL"/></marker>';
+
+// 4 vectơ: tail p, head q (pixel)
+const V = [
+  {n:'AB→', p:[70,120],  q:[190,120],  c:'#c62828'},
+  {n:'CD→', p:[70,220],  q:[160,220],  c:'#1565c0'},
+  {n:'EF→', p:[240,120], q:[360,120],  c:'#2e7d32'},
+  {n:'GH→', p:[90,320],  q:[220,270],  c:'#6a1b9a'}
+];
+let showGia = false, sel = 0;
+
+V.forEach((v,i)=>{
+  v.gia = el('line',{x1:0,y1:0,x2:0,y2:0,stroke:v.c,'stroke-width':2,'stroke-dasharray':'8 6',opacity:.45,display:'none'});
+  v.shaft = el('line',{stroke:v.c,'stroke-width':5,cursor:'pointer'});
+  v.ptP = el('circle',{r:9,fill:'#fff',stroke:v.c,'stroke-width':3,cursor:'grab'});
+  v.ptQ = el('circle',{r:9,fill:'#fff',stroke:v.c,'stroke-width':3,cursor:'grab'});
+  v.lbl = el('text',{'font-size':17,'font-weight':'bold',fill:v.c});
+  v.lenLbl = el('text',{'font-size':14,fill:'#333','text-anchor':'middle'});
+  v.shaft.addEventListener('pointerdown', e=>{ select(i); e.preventDefault(); });
+  v.ptP.dataset.vi = i; v.ptP.dataset.end = 'p';
+  v.ptQ.dataset.vi = i; v.ptQ.dataset.end = 'q';
+  v.ptP.addEventListener('pointerdown', startDrag);
+  v.ptQ.addEventListener('pointerdown', startDrag);
+});
+let dragT = null;
+function startDrag(e){ dragT = {vi:+e.target.dataset.vi, end:e.target.dataset.end}; e.preventDefault(); }
+window.addEventListener('pointermove', e=>{
+  if(!dragT) return;
+  const r = svg.getBoundingClientRect(), s = 540/r.width;
+  const v = V[dragT.vi];
+  v[dragT.end] = [(e.clientX-r.left)*s, (e.clientY-r.top)*s];
+  draw(); analyze();
+});
+window.addEventListener('pointerup', ()=>{ dragT = null; });
+
+function select(i){
+  sel = i;
+  document.getElementById('selName').textContent = V[i].n;
+  document.getElementById('selName2').textContent = V[i].n;
+  const L = Math.hypot(V[i].q[0]-V[i].p[0], V[i].q[1]-V[i].p[1])/PX;
+  document.getElementById('lenSlider').value = L;
+  document.getElementById('lenVal').textContent = Math.round(L*2)/2;
+  draw();
+}
+document.getElementById('lenSlider').addEventListener('input', function(){
+  const v = V[sel], L = +this.value;
+  const dx = v.q[0]-v.p[0], dy = v.q[1]-v.p[1], d = Math.hypot(dx,dy)||1;
+  v.q = [v.p[0]+dx/d*L*PX, v.p[1]+dy/d*L*PX];
+  document.getElementById('lenVal').textContent = L;
+  draw(); analyze();
+});
+window.toggleGia = function(){
+  showGia = !showGia;
+  document.getElementById('giaBtn').textContent = showGia ? '📏 Ẩn giá các vectơ' : '📏 Hiện giá các vectơ';
+  draw();
+};
+
+// Toán quan hệ giữa hai vectơ
+function rel(a,b){
+  const dx1=a.q[0]-a.p[0], dy1=a.q[1]-a.p[1], d1=Math.hypot(dx1,dy1);
+  const dx2=b.q[0]-b.p[0], dy2=b.q[1]-b.p[1], d2=Math.hypot(dx2,dy2);
+  const u1=[dx1/d1,dy1/d1], u2=[dx2/d2,dy2/d2];
+  const cross = u1[0]*u2[1]-u1[1]*u2[0];
+  const dot = u1[0]*u2[0]+u1[1]*u2[1];
+  // khoảng cách từ p của b tới đường thẳng qua a
+  const dist = Math.abs((b.p[0]-a.p[0])*u1[1]-(b.p[1]-a.p[1])*u1[0]);
+  const songSong = Math.abs(cross) < 0.09;
+  const trung = songSong && dist < 8;
+  const cungHuong = dot > 0.96;
+  const nguocHuong = dot < -0.96;
+  const L1 = d1/PX, L2 = d2/PX;
+  const bangDai = Math.abs(L1-L2) < 0.26;
+  return {songSong, trung, cungHuong, nguocHuong, L1, L2, bangDai,
+          bangNhau: cungHuong && bangDai,
+          cungPhuong: songSong || trung};
+}
+const VNAMES = V.map(v=>v.n);
+function pairText(a,b){
+  const r = rel(a,b);
+  const gia = r.trung ? 'trùng nhau' : (r.songSong ? 'song song' : 'cắt nhau');
+  const huong = r.cungHuong ? 'cùng hướng' : (r.nguocHuong ? 'ngược hướng' : 'khác hướng');
+  const dai = r.bangDai ? 'bằng nhau' : 'khác nhau';
+  let kl = '—';
+  if (r.bangNhau) kl = 'BẰNG NHAU';
+  else if (r.cungPhuong) kl = 'cùng phương';
+  else kl = 'không cùng phương';
+  return {gia, huong, dai, kl, r};
+}
+function analyze(){
+  const i = VNAMES.indexOf(document.getElementById('p1').value);
+  const j = VNAMES.indexOf(document.getElementById('p2').value);
+  if (i === j) { document.getElementById('pairInfo').textContent = 'Hãy chọn hai vectơ khác nhau.'; return; }
+  const t = pairText(V[i], V[j]);
+  document.getElementById('pairInfo').innerHTML =
+    `Giá: <b>${t.gia}</b> · Hướng: <b>${t.huong}</b> · Độ dài (${t.r.L1.toFixed(1)} cm / ${t.r.L2.toFixed(1)} cm): <b>${t.dai}</b><br>Kết luận: <b>${t.kl}</b>`;
+  // Đèn báo toàn cục
+  let l1=false, l2=false, l3=false;
+  for(let x=0;x<4;x++) for(let y=x+1;y<4;y++){
+    const r = rel(V[x],V[y]);
+    if (r.songSong && !r.trung) l1 = true;
+    if (r.trung) l2 = true;
+    if (r.bangNhau) l3 = true;
+  }
+  document.getElementById('lamp1').classList.toggle('on', l1);
+  document.getElementById('lamp2').classList.toggle('on', l2);
+  document.getElementById('lamp3').classList.toggle('on', l3);
+}
+document.getElementById('p1').addEventListener('change', analyze);
+document.getElementById('p2').addEventListener('change', analyze);
+
+function draw(){
+  V.forEach((v,i)=>{
+    v.shaft.setAttribute('x1',v.p[0]); v.shaft.setAttribute('y1',v.p[1]);
+    v.shaft.setAttribute('x2',v.q[0]); v.shaft.setAttribute('y2',v.q[1]);
+    v.shaft.setAttribute('marker-end', null);
+    // mũi tên thủ công (marker chung không đổi màu được)
+    v.shaft.style.markerEnd = '';
+    v.ptP.setAttribute('cx',v.p[0]); v.ptP.setAttribute('cy',v.p[1]);
+    v.ptQ.setAttribute('cx',v.q[0]); v.ptQ.setAttribute('cy',v.q[1]);
+    v.lbl.setAttribute('x',(v.p[0]+v.q[0])/2); v.lbl.setAttribute('y',(v.p[1]+v.q[1])/2-12);
+    v.lbl.textContent = v.n + (i===sel ? ' ✓' : '');
+    const L = Math.hypot(v.q[0]-v.p[0], v.q[1]-v.p[1])/PX;
+    v.lenLbl.setAttribute('x',(v.p[0]+v.q[0])/2); v.lenLbl.setAttribute('y',(v.p[1]+v.q[1])/2+20);
+    v.lenLbl.textContent = (Math.round(L*2)/2) + ' cm';
+    if (showGia){
+      const dx=v.q[0]-v.p[0], dy=v.q[1]-v.p[1], d=Math.hypot(dx,dy)||1;
+      const ux=dx/d, uy=dy/d;
+      v.gia.setAttribute('x1',v.p[0]-ux*600); v.gia.setAttribute('y1',v.p[1]-uy*600);
+      v.gia.setAttribute('x2',v.p[0]+ux*600); v.gia.setAttribute('y2',v.p[1]+uy*600);
+      v.gia.setAttribute('display','block');
+    } else v.gia.setAttribute('display','none');
+    // mũi tên
+    if (!v.arrow){ v.arrow = el('polygon',{fill:v.c}); }
+    const ax=v.q[0], ay=v.q[1];
+    const ux=(v.q[0]-v.p[0])/(Math.hypot(v.q[0]-v.p[0],v.q[1]-v.p[1])||1);
+    const uy=(v.q[1]-v.p[1])/(Math.hypot(v.q[0]-v.p[0],v.q[1]-v.p[1])||1);
+    const bx=ax-ux*14, by=ay-uy*14;
+    v.arrow.setAttribute('points', `${ax},${ay} ${bx-uy*6},${by+ux*6} ${bx+uy*6},${by-ux*6}`);
+    v.shaft.setAttribute('x2', bx); v.shaft.setAttribute('y2', by); // trục dừng trước mũi tên
+    // kéo điểm Q ra ngoài mũi tên một chút để dễ bấm
+    v.ptQ.setAttribute('cx', ax); v.ptQ.setAttribute('cy', ay);
+  });
+}
+
+let n = 0;
+window.record = function(){
+  const i = VNAMES.indexOf(document.getElementById('p1').value);
+  const j = VNAMES.indexOf(document.getElementById('p2').value);
+  if (i === j) return;
+  n++;
+  const t = pairText(V[i], V[j]);
+  document.getElementById('dataTable').insertAdjacentHTML('beforeend',
+    `<tr><td>${n}</td><td>${V[i].n}–${V[j].n}</td><td>${t.gia}</td><td>${t.huong}</td><td>${t.dai}</td></tr>`);
+};
+
+window.saveGuess = function(){
+  const v = document.getElementById('duDoan').value.trim();
+  document.getElementById('guessNote').textContent = v ? 'Đã ghi nhận dự đoán của em. Giờ hãy kiểm chứng bằng thí nghiệm! ✍️' : 'Em hãy viết dự đoán trước khi làm thí nghiệm nhé.';
+};
+
+window.check = function(){
+  const ok1 = ['song song'].includes(document.getElementById('f1').value.trim().toLowerCase());
+  const ok2 = ['trùng','trùng nhau'].includes(document.getElementById('f2').value.trim().toLowerCase());
+  document.getElementById('f1').className = ok1?'ok':'bad';
+  document.getElementById('f2').className = ok2?'ok':'bad';
+  if (ok1 && ok2){ document.getElementById('eureka').style.display='block'; boom(); }
+};
+function boom(){
+  const c = document.getElementById('confetti'), ctx = c.getContext('2d');
+  c.width = innerWidth; c.height = innerHeight;
+  const cols = ['#f44336','#ffeb3b','#4caf50','#2196f3','#ff9800','#9c27b0'];
+  const ps = Array.from({length:160},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*0.5,
+    w:6+Math.random()*6,h:8+Math.random()*8,c:cols[Math.random()*cols.length|0],
+    vy:2+Math.random()*3,vx:-1.5+Math.random()*3,r:Math.random()*Math.PI,vr:-0.1+Math.random()*0.2}));
+  let t=0;
+  (function tick(){
+    ctx.clearRect(0,0,c.width,c.height);
+    ps.forEach(p=>{ p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore(); });
+    if(++t<240) requestAnimationFrame(tick); else ctx.clearRect(0,0,c.width,c.height);
+  })();
+}
+draw(); analyze();
+})();
+</script>
+</body>
+</html>

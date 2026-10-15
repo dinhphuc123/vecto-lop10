@@ -1,0 +1,63 @@
+{
+ "video": "v3_vectorkhong",
+ "title": "Vectơ-không",
+ "chặng": "S10",
+ "duration": 52.09,
+ "segments": [
+  {
+   "index": 0,
+   "kicker": "Thử tưởng tượng",
+   "title": "Co vectơ ngắn dần",
+   "start": 0.0,
+   "duration": 9.88
+  },
+  {
+   "index": 1,
+   "kicker": "Tên gọi mới",
+   "title": "Vectơ có điểm đầu trùng điểm cuối",
+   "start": 9.88,
+   "duration": 12.23
+  },
+  {
+   "index": 2,
+   "kicker": "Độ dài đặc biệt",
+   "title": "Độ dài của vectơ-không bằng 0",
+   "start": 22.11,
+   "duration": 10.22
+  },
+  {
+   "index": 3,
+   "kicker": "Quy ước chung",
+   "title": "Cùng phương, cùng hướng với mọi vectơ",
+   "start": 32.33,
+   "duration": 9.59
+  },
+  {
+   "index": 4,
+   "kicker": "Nhớ nhé",
+   "title": "Tóm tắt: vectơ-không",
+   "start": 41.92,
+   "duration": 10.17
+  }
+ ],
+ "pauses": [
+  {
+   "at": 32.33,
+   "quiz_id": "v3d1",
+   "type": "mcq",
+   "graded": true,
+   "block_seek": true,
+   "question": "Độ dài của vectơ-không bằng bao nhiêu?",
+   "options": [
+    "0",
+    "1",
+    "Không xác định được",
+    "Bằng độ dài mọi vectơ"
+   ],
+   "correct": 0,
+   "explain": "Điểm đầu trùng điểm cuối nên độ dài của vectơ-không bằng 0.",
+   "answer_hint": null,
+   "modal_lead": "Em vừa học độ dài vectơ-không. Trả lời câu hỏi rồi xem tiếp nhé."
+  }
+ ]
+}

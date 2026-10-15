@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lab 1 (S03) — Vectơ là đoạn thẳng có hướng</title>
+<style>
+  body { font-family: "Segoe UI", sans-serif; max-width: 920px; margin: 0 auto; padding: 16px; background: #f7f9fc; color: #222; }
+  h2 { color: #1565c0; margin: 4px 0 10px; }
+  .step { background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 14px 16px; margin: 14px 0; }
+  .step h3 { margin: 0 0 8px; color: #1565c0; font-size: 18px; }
+  .hint { color: #555; font-size: 14px; }
+  textarea { width: 100%; min-height: 56px; border: 1px solid #bbb; border-radius: 8px; padding: 8px; font-size: 16px; font-family: inherit; box-sizing: border-box; }
+  button { font-size: 16px; padding: 9px 16px; border-radius: 8px; border: none; cursor: pointer; background: #1565c0; color: #fff; }
+  button.ghost { background: #e3f2fd; color: #1565c0; }
+  button:disabled { opacity: .5; cursor: default; }
+  .panel { display: flex; gap: 16px; flex-wrap: wrap; }
+  #stage { background: #fff; border: 1px solid #ddd; border-radius: 8px; max-width: 100%; height: auto; touch-action: none; }
+  .controls { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 14px; min-width: 250px; flex: 1; }
+  input[type=range] { width: 100%; min-height: 34px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 15px; }
+  td, th { border: 1px solid #ccc; padding: 6px 8px; text-align: center; }
+  th { background: #e3f2fd; }
+  .big { font-size: 22px; font-weight: bold; color: #c62828; }
+  .lamp { display: flex; align-items: center; gap: 10px; background: #f1f8e9; border: 1px solid #c5e1a5; border-radius: 8px; padding: 10px 12px; margin: 10px 0; font-size: 16px; }
+  .lamp .dot { width: 20px; height: 20px; border-radius: 50%; background: #bdbdbd; flex: none; }
+  .lamp.on .dot { background: #2e7d32; box-shadow: 0 0 10px #2e7d32; }
+  .q { background: #fff3e0; border-left: 4px solid #ef6c00; padding: 10px 14px; margin: 10px 0; font-size: 16px; }
+  .q .ans { display: none; margin-top: 8px; color: #2e7d32; font-weight: bold; }
+  .q.show .ans { display: block; }
+  .fill { font-size: 17px; line-height: 2.2; }
+  .fill input { width: 60px; font-size: 17px; text-align: center; border: 2px solid #bbb; border-radius: 6px; padding: 4px; }
+  .fill input.ok { border-color: #2e7d32; background: #e8f5e9; }
+  .fill input.bad { border-color: #c62828; background: #ffebee; }
+  #eureka { display: none; text-align: center; padding: 12px; background: #e8f5e9; border: 2px solid #2e7d32; border-radius: 10px; margin-top: 10px; font-size: 18px; color: #1b5e20; }
+  #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 9999; }
+  .note { color: #555; font-size: 14px; margin-top: 10px; }
+</style>
+</head>
+<body>
+<h2>🔬 Lab 1 — Vectơ là đoạn thẳng có hướng</h2>
+
+<div class="step" id="s1">
+  <h3>Bước 1 — Dự đoán</h3>
+  <p><b>"Em có hai điểm A, B. Em nghĩ đoạn thẳng AB có mấy 'hướng đi'?"</b>
+     <span class="hint">(Dự đoán tự do, không chấm đúng sai)</span></p>
+  <textarea id="duDoan" placeholder="Em viết dự đoán của mình vào đây…"></textarea><br><br>
+  <button class="ghost" onclick="saveGuess()">📌 Ghi dự đoán</button>
+  <p class="hint" id="guessNote"></p>
+</div>
+
+<div class="step" id="s2">
+  <h3>Bước 2 — Thao tác</h3>
+  <div class="panel">
+    <svg id="stage" width="540" height="400" viewBox="0 0 540 400"></svg>
+    <div class="controls">
+      <label><b>Độ dài vectơ:</b> <span id="lenVal">5</span> cm</label>
+      <input type="range" id="lenSlider" min="1" max="8" step="0.5" value="5">
+      <p>Độ dài hiện tại: <span class="big" id="lenNow">|AB→| = 5 cm</span></p>
+      <p>Hướng mũi tên: <b id="dirNow">lên</b></p>
+      <button onclick="record()">📋 Ghi số liệu</button>
+      <table id="dataTable">
+        <tr><th>#</th><th>Hướng</th><th>|AB→| (cm)</th></tr>
+      </table>
+      <p class="note">👆 Kéo <b>điểm B</b> quanh A để xoay hướng. Đổi độ dài bằng thanh trượt. Ghi ít nhất 3 mẫu (hướng lên / xuống / trái).</p>
+    </div>
+  </div>
+</div>
+
+<div class="step" id="s3">
+  <h3>Bước 3 — Quan sát</h3>
+  <div class="lamp" id="lamp"><span class="dot"></span><span id="lampText">Đèn báo: ghi số liệu khi xoay để kiểm chứng.</span></div>
+  <div class="q">"Em xoay B quanh A. Độ dài có đổi không?" <button class="ghost" onclick="this.parentElement.classList.toggle('show')">Hiện đáp án</button>
+    <div class="ans">Đáp án: Không đổi.</div></div>
+  <div class="q">"Em giữ nguyên độ dài, đổi hướng mũi tên. Vectơ có đổi không?" <button class="ghost" onclick="this.parentElement.classList.toggle('show')">Hiện đáp án</button>
+    <div class="ans">Đáp án: Đổi (điểm đầu và điểm cuối đổi vai trò).</div></div>
+</div>
+
+<div class="step" id="s4">
+  <h3>Bước 4 — Kết luận</h3>
+  <p class="fill">Vectơ <span id="fAB">AB→</span> là đoạn thẳng có hướng: điểm
+    <input id="f1" maxlength="1" oninput="this.value=this.value.toUpperCase()"> là điểm đầu, điểm
+    <input id="f2" maxlength="1" oninput="this.value=this.value.toUpperCase()"> là điểm cuối.</p>
+  <button onclick="check()">Kiểm tra kết luận</button>
+  <div id="eureka">🎉 <b>EUREKA!</b> Em đã tự khám phá ra: vectơ là đoạn thẳng có hướng — điểm đầu và điểm cuối làm nên ý nghĩa của nó.</div>
+</div>
+<canvas id="confetti"></canvas>
+
+<script>
+(function(){
+"use strict";
+const svg = document.getElementById('stage');
+const NS = 'http://www.w3.org/2000/svg';
+const Ax = 270, Ay = 200, PX = 30; // 30 px = 1 cm
+function el(name, attrs){ const e=document.createElementNS(NS,name); for(const k in attrs) e.setAttribute(k,attrs[k]); svg.appendChild(e); return e; }
+// Nền chấm tròn (đơn vị cm, chỉ để ước lượng — không dùng tọa độ)
+const grid = el('g', {});
+svg.insertBefore(grid, svg.firstChild);
+for(let x=Ax-240;x<=Ax+240;x+=PX){ const l=document.createElementNS(NS,'line'); l.setAttribute('x1',x);l.setAttribute('y1',0);l.setAttribute('x2',x);l.setAttribute('y2',400);l.setAttribute('stroke','#eee');grid.appendChild(l); }
+for(let y=Ay-180;y<=Ay+180;y+=PX){ const l=document.createElementNS(NS,'line'); l.setAttribute('x1',0);l.setAttribute('y1',y);l.setAttribute('x2',540);l.setAttribute('y2',y);l.setAttribute('stroke','#eee');grid.appendChild(l); }
+// Vòng tròn bán kính độ dài (khi xoay, B đi trên vòng này)
+const circle = el('circle',{cx:Ax,cy:Ay,r:150,fill:'none',stroke:'#90caf9','stroke-width':1.5,'stroke-dasharray':'6 5'});
+// Vectơ
+el('defs',{}).innerHTML = '<marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L9,3 L0,6 Z" fill="#c62828"/></marker>';
+const shaft = el('line',{x1:Ax,y1:Ay,x2:Ax,y2:Ay-150,stroke:'#c62828','stroke-width':5,'marker-end':'url(#arr)'});
+const ptA = el('circle',{cx:Ax,cy:Ay,r:8,fill:'#1565c0'});
+const ptB = el('circle',{cx:Ax,cy:Ay-150,r:11,fill:'#fff',stroke:'#c62828','stroke-width':3,cursor:'grab'});
+const lblA = el('text',{x:Ax-16,y:Ay+24,'font-size':18,'font-weight':'bold',fill:'#1565c0'}); lblA.textContent='A';
+const lblB = el('text',{'font-size':18,'font-weight':'bold',fill:'#c62828'}); lblB.textContent='B';
+const lblV = el('text',{'font-size':18,'font-style':'italic','text-anchor':'middle',fill:'#333'});
+const lblD = el('text',{'font-size':15,'text-anchor':'middle',fill:'#333'});
+
+let ang = -Math.PI/2, len = 5, dragging = false;
+const slider = document.getElementById('lenSlider');
+
+function compass(a){
+  // a: góc theo hướng màn hình; chuyển sang 8 hướng
+  let d = ((a + Math.PI/2) / (Math.PI/4)); // 0 = lên
+  d = ((Math.round(d) % 8) + 8) % 8;
+  return ['lên','lên-phải','phải','xuống-phải','xuống','xuống-trái','trái','lên-trái'][d];
+}
+function draw(){
+  const r = len * PX;
+  const Bx = Ax + r*Math.cos(ang), By = Ay + r*Math.sin(ang);
+  circle.setAttribute('r', r);
+  shaft.setAttribute('x2',Bx); shaft.setAttribute('y2',By);
+  ptB.setAttribute('cx',Bx); ptB.setAttribute('cy',By);
+  lblB.setAttribute('x',Bx+14); lblB.setAttribute('y',By+6);
+  lblV.setAttribute('x',(Ax+Bx)/2+14); lblV.setAttribute('y',(Ay+By)/2);
+  lblV.textContent = 'AB→';
+  lblD.setAttribute('x',(Ax+Bx)/2); lblD.setAttribute('y',(Ay+By)/2+18);
+  lblD.textContent = len + ' cm';
+  document.getElementById('lenVal').textContent = len;
+  document.getElementById('lenNow').textContent = '|AB→| = ' + len + ' cm';
+  document.getElementById('dirNow').textContent = compass(ang);
+}
+slider.addEventListener('input', ()=>{ len = +slider.value; draw(); });
+
+// Kéo điểm B (chuột + cảm ứng)
+function pt(evt){
+  const r = svg.getBoundingClientRect();
+  const scale = 540 / r.width;
+  const cx = (evt.touches ? evt.touches[0].clientX : evt.clientX) - r.left;
+  const cy = (evt.touches ? evt.touches[0].clientY : evt.clientY) - r.top;
+  return [cx*scale, cy*scale];
+}
+ptB.addEventListener('pointerdown', e=>{ dragging=true; ptB.setAttribute('cursor','grabbing'); e.preventDefault(); });
+window.addEventListener('pointermove', e=>{
+  if(!dragging) return;
+  const r = svg.getBoundingClientRect(); const scale = 540/r.width;
+  const x=(e.clientX-r.left)*scale, y=(e.clientY-r.top)*scale;
+  ang = Math.atan2(y-Ay, x-Ax); // xoay B quanh A, độ dài giữ nguyên theo thanh trượt
+  draw();
+});
+window.addEventListener('pointerup', ()=>{ dragging=false; ptB.setAttribute('cursor','grab'); });
+
+// Ghi số liệu
+let n = 0;
+const samples = [];
+window.record = function(){
+  n++;
+  samples.push({dir: compass(ang), len: len});
+  const t = document.getElementById('dataTable');
+  t.insertAdjacentHTML('beforeend', `<tr><td>${n}</td><td>${compass(ang)}</td><td>${len}</td></tr>`);
+  const lens = samples.map(s=>s.len);
+  const spread = Math.max(...lens) - Math.min(...lens);
+  if (samples.length >= 3 && spread === 0) {
+    document.getElementById('lamp').classList.add('on');
+    document.getElementById('lampText').textContent = 'Đèn báo: BẬT — chỉ xoay (đổi hướng) mà độ dài |AB→| không đổi!';
+  } else if (samples.length >= 3) {
+    document.getElementById('lampText').textContent = 'Đèn báo: em đã đổi độ dài bằng thanh trượt. Hãy giữ nguyên thanh trượt, chỉ xoay B rồi ghi lại.';
+  } else {
+    document.getElementById('lampText').textContent = `Đã ghi ${samples.length}/3 mẫu.`;
+  }
+};
+
+// Bước 1
+window.saveGuess = function(){
+  const v = document.getElementById('duDoan').value.trim();
+  document.getElementById('guessNote').textContent = v ? 'Đã ghi nhận dự đoán của em. Giờ hãy kiểm chứng bằng thí nghiệm! ✍️' : 'Em hãy viết dự đoán trước khi làm thí nghiệm nhé.';
+};
+
+// Bước 4
+window.check = function(){
+  const a = document.getElementById('f1'), b = document.getElementById('f2');
+  const okA = a.value === 'A', okB = b.value === 'B';
+  a.className = okA ? 'ok' : 'bad'; b.className = okB ? 'ok' : 'bad';
+  if (okA && okB) { document.getElementById('eureka').style.display = 'block'; boom(); }
+};
+function boom(){
+  const c = document.getElementById('confetti'), ctx = c.getContext('2d');
+  c.width = innerWidth; c.height = innerHeight;
+  const cols = ['#f44336','#ffeb3b','#4caf50','#2196f3','#ff9800','#9c27b0'];
+  const ps = Array.from({length:160},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height*0.5,
+    w:6+Math.random()*6,h:8+Math.random()*8,c:cols[Math.random()*cols.length|0],
+    vy:2+Math.random()*3,vx:-1.5+Math.random()*3,r:Math.random()*Math.PI,vr:-0.1+Math.random()*0.2}));
+  let t=0;
+  (function tick(){
+    ctx.clearRect(0,0,c.width,c.height);
+    ps.forEach(p=>{ p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore(); });
+    if(++t<240) requestAnimationFrame(tick); else ctx.clearRect(0,0,c.width,c.height);
+  })();
+}
+draw();
+})();
+</script>
+</body>
+</html>

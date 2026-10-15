@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Các khái niệm mở đầu (Vectơ) — Toán 10 | Tiêu Đình Phúc</title>
+<link rel="stylesheet" href="assets/katex/katex.min.css">
+<style>
+  :root { --blue:#1565c0; --dark:#1c3a63; --bg:#f4f7fb; --ok:#1d9d55; --bad:#c62828; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:#222; line-height:1.6; }
+  header.top { position:sticky; top:0; z-index:50; background:var(--dark); color:#fff;
+    display:flex; align-items:center; gap:10px; padding:10px 14px; }
+  header.top h1 { font-size:16px; margin:0; flex:1; line-height:1.35; }
+  #menuBtn { background:#2f7fe0; color:#fff; border:none; border-radius:8px; font-size:18px;
+    padding:8px 12px; cursor:pointer; }
+  #progWrap { width:110px; background:#0d2440; border-radius:6px; height:10px; overflow:hidden; flex:none; }
+  #progBar { height:100%; width:0; background:linear-gradient(90deg,#42a5f5,#1d9d55); transition:width .4s; }
+  #progTxt { font-size:12px; color:#cfe0f5; white-space:nowrap; }
+  #drawer { position:fixed; top:0; left:0; bottom:0; width:min(340px,86vw); background:#fff; z-index:100;
+    transform:translateX(-105%); transition:transform .25s; box-shadow:2px 0 12px rgba(0,0,0,.25);
+    display:flex; flex-direction:column; }
+  #drawer.open { transform:none; }
+  #drawer h2 { margin:0; padding:14px 16px; background:var(--blue); color:#fff; font-size:16px; }
+  #sceneList { list-style:none; margin:0; padding:8px; overflow-y:auto; flex:1; }
+  #sceneList li { margin:2px 0; }
+  #sceneList button { width:100%; text-align:left; border:1px solid #e0e6ef; background:#fff;
+    border-radius:10px; padding:10px 12px; font-size:15px; cursor:pointer; display:flex; gap:8px; align-items:center; }
+  #sceneList button.cur { border-color:var(--blue); background:#e8f1fd; font-weight:700; }
+  #sceneList button.done .mk { color:var(--ok); }
+  #sceneList button.locked { opacity:.55; cursor:not-allowed; }
+  #sceneList .mk { flex:none; width:22px; text-align:center; }
+  #scrim { position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:90; display:none; }
+  #scrim.on { display:block; }
+  main#stage { max-width:960px; margin:0 auto; padding:16px 14px 120px; }
+  .scene-head { background:#fff; border:1px solid #d7dee8; border-radius:14px; padding:14px 16px; margin-bottom:6px; }
+  .scene-head h2 { margin:0 0 4px; color:var(--dark); font-size:20px; }
+  .scene-head .meta { color:#5a6b82; font-size:13px; }
+  footer.nav { position:fixed; left:0; right:0; bottom:0; z-index:50; background:#fff;
+    border-top:1px solid #d7dee8; padding:10px 14px; display:flex; gap:10px; justify-content:space-between;
+    max-width:960px; margin:0 auto; }
+  .btn { font-size:16px; padding:11px 20px; border-radius:10px; border:none; cursor:pointer; font-weight:700; }
+  .btn.ghost { background:#e3f2fd; color:var(--blue); }
+  .btn.primary { background:var(--blue); color:#fff; }
+  .btn.success { background:var(--ok); color:#fff; }
+  .btn:disabled { opacity:.45; cursor:not-allowed; }
+  #toast { position:fixed; left:50%; bottom:86px; transform:translateX(-50%); background:#263238; color:#fff;
+    padding:10px 18px; border-radius:10px; font-size:15px; z-index:200; display:none; max-width:90vw; text-align:center; }
+  /* video */
+  .app-video { background:#0f1c2e; border-radius:12px; padding:12px; margin:12px 0; }
+  .app-video video { width:100%; max-height:52vh; border-radius:8px; background:#000; display:block; }
+  .app-video .vstart { display:block; width:100%; margin-top:10px; }
+  .vpause { background:#fff; border:2px solid #f0ad4e; border-radius:10px; padding:12px; margin-top:10px; color:#222; }
+  /* lab */
+  .lab-frame { width:100%; height:720px; border:1px solid #d7dee8; border-radius:12px; background:#fff; }
+  @media (max-width:480px){ .lab-frame{ height:560px; } header.top h1{ font-size:14px; } }
+  /* eureka */
+  #eurekaLayer { position:fixed; inset:0; pointer-events:none; z-index:300; display:none; }
+  /* badges + mindmap */
+  .badges { display:flex; gap:10px; flex-wrap:wrap; margin:12px 0; }
+  .badge { flex:1 1 200px; border:2px solid #d7dee8; border-radius:12px; padding:12px; text-align:center; background:#fff; }
+  .badge.earned { border-color:#f0b429; background:#fffdf4; box-shadow:0 0 10px rgba(240,180,41,.35); }
+  .badge .ico { font-size:34px; }
+  .badge.locked { opacity:.5; filter:grayscale(1); }
+  .mm-svg { width:100%; height:auto; background:#fff; border:1px solid #d7dee8; border-radius:12px; }
+  .tex { white-space:nowrap; }
+  .katex { font-size:1.06em; }
+</style>
+</head>
+<body>
+<header class="top">
+  <button id="menuBtn" aria-label="Mở mục lục">☰</button>
+  <h1>Các khái niệm mở đầu (Vectơ) — Toán 10 · 2 tiết</h1>
+  <span id="progTxt">0/14</span>
+  <div id="progWrap" role="progressbar" aria-label="Tiến trình"><div id="progBar"></div></div>
+</header>
+<div id="scrim"></div>
+<nav id="drawer" aria-label="Mục lục bài học">
+  <h2>📚 Mục lục <span style="font-weight:400;font-size:13px">(GV: Tiêu Đình Phúc)</span></h2>
+  <ul id="sceneList"></ul>
+</nav>
+<main id="stage" aria-live="polite"></main>
+<footer class="nav">
+  <button id="btnBack" class="btn ghost" type="button">← Trở lại</button>
+  <button id="btnNext" class="btn primary" type="button" disabled>🔒 Tiếp tục →</button>
+  <button id="btnFinish" class="btn success" type="button" style="display:none">✓ Hoàn thành khóa học</button>
+</footer>
+<div id="toast" role="status"></div>
+<div id="eurekaLayer"><canvas id="eurekaCanvas"></canvas></div>
+
+<script src="assets/katex/katex.min.js"></script>
+<script src="assets/js/quiz.js"></script>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/scenes.js"></script>
+<script src="assets/js/scenes2.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

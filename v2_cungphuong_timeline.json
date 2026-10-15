@@ -1,0 +1,95 @@
+{
+ "video": "v2_cungphuong",
+ "title": "Cùng phương, cùng hướng, bằng nhau",
+ "chặng": "S07",
+ "duration": 64.42,
+ "segments": [
+  {
+   "index": 0,
+   "kicker": "Đường thẳng chứa vectơ",
+   "title": "Giá của vectơ",
+   "start": 0.0,
+   "duration": 7.72
+  },
+  {
+   "index": 1,
+   "kicker": "Cùng phương là gì?",
+   "title": "Giá song song hoặc trùng nhau",
+   "start": 7.72,
+   "duration": 13.41
+  },
+  {
+   "index": 2,
+   "kicker": "Hai chiều mũi tên",
+   "title": "Cùng hướng và ngược hướng",
+   "start": 21.13,
+   "duration": 8.32
+  },
+  {
+   "index": 3,
+   "kicker": "Khi nào bằng nhau?",
+   "title": "Cùng hướng và cùng độ dài",
+   "start": 29.45,
+   "duration": 11.11
+  },
+  {
+   "index": 4,
+   "kicker": "Ví dụ",
+   "title": "Nhìn hình, kết luận",
+   "start": 40.56,
+   "duration": 9.28
+  },
+  {
+   "index": 5,
+   "kicker": "Nhớ kỹ",
+   "title": "Cùng phương chưa chắc bằng nhau",
+   "start": 49.84,
+   "duration": 7.36
+  },
+  {
+   "index": 6,
+   "kicker": "Nhớ nhé",
+   "title": "Tóm tắt: phương, hướng, bằng nhau",
+   "start": 57.2,
+   "duration": 7.22
+  }
+ ],
+ "pauses": [
+  {
+   "at": 21.13,
+   "quiz_id": "v2d1",
+   "type": "mcq",
+   "graded": true,
+   "block_seek": true,
+   "question": "Hai giá song song thì hai vectơ thế nào?",
+   "options": [
+    "Cùng phương",
+    "Cùng hướng",
+    "Bằng nhau",
+    "Ngược hướng"
+   ],
+   "correct": 0,
+   "explain": "Giá song song hoặc trùng nhau thì hai vectơ cùng phương.",
+   "answer_hint": null,
+   "modal_lead": "Em vừa học khái niệm cùng phương. Trả lời câu hỏi rồi xem tiếp nhé."
+  },
+  {
+   "at": 40.56,
+   "quiz_id": "v2d2",
+   "type": "mcq",
+   "graded": true,
+   "block_seek": true,
+   "question": "Muốn hai vectơ bằng nhau cần thêm điều kiện gì?",
+   "options": [
+    "Cùng hướng và cùng độ dài",
+    "Chỉ cần cùng phương",
+    "Chỉ cần cùng độ dài",
+    "Chỉ cần cùng hướng"
+   ],
+   "correct": 0,
+   "explain": "Hai vectơ bằng nhau khi cùng hướng và có cùng độ dài.",
+   "answer_hint": null,
+   "modal_lead": "Em vừa học điều kiện bằng nhau. Trả lời câu hỏi rồi xem tiếp nhé."
+  }
+ ]
+}
